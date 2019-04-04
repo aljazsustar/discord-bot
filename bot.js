@@ -12,6 +12,24 @@ client.on('message', msg => {
  msg.reply('pong');
  }
  });
+ 
+client.on('message', msg =>{
+    if (msg.content == 'Marco'){
+        msg.reply('Polo!');
+    }
+})
+
+client.on('message', msg =>{
+    if (msg.content == 'lol'){
+        msg.reply('BadJoke++;');
+    }
+})
+
+client.on('message', msg =>{
+    if (msg.content == 'hehe'){
+        msg.reply('VeryGoodJoke++;');
+    }
+})
 
 client.on('message', msg =>{
     if (msg.content == 'jabolj play despacito'){
