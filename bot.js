@@ -1,6 +1,8 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
+var songsJSON = require('./songs.json');
+var songData = JSON.parse(songsJSON);
 var message = "";
 
 client.on('ready', () => {
@@ -21,7 +23,9 @@ client.on('message', msg =>{
 
 client.on('message', msg =>{
     if (msg.content == 'lol'){
-        msg.reply('BadJoke++;');
+        if (client.user.tag == 6390){
+            msg.reply('BadJoke++;');
+        }
     }
 })
 
@@ -45,6 +49,8 @@ client.on('message', msg =>{
         console.log(query);
         var formatted = query.replace(/ /gi, "+");
         console.log(formatted);
+        var songID = songData[0].query;
+        console.log(songID);
         var reply = 'https://www.youtube.com/results?search_query=' + formatted;
         msg.reply(reply);
     }
