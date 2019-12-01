@@ -9,7 +9,7 @@ client.on('ready', () => {
  });
 
 client.on('message', msg => {
-    if (msg.content === "dad joke") {
+    if (msg.content.toLowerCase() === "dad joke") {
         https.get('https://us-central1-dadsofunny.cloudfunctions.net/DadJokes/random/jokes', (response) => {
             let data = '';
             response.on('data', (chunk) => {
@@ -21,7 +21,7 @@ client.on('message', msg => {
                 msg.reply(object.setup + " " + object.punchline);
             });
         });
-    } else if (msg.content === "programming dad joke") {
+    } else if (msg.content.toLowerCase() === "programming dad joke") {
         https.get('https://us-central1-dadsofunny.cloudfunctions.net/DadJokes/random/type/programming', (response) => {
             let data = '';
             response.on('data', (chunk) => {
