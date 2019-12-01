@@ -6,7 +6,14 @@
   "author": "Aljaž",
   "dependencies": {
     "discord.io": "^2.5.3",
+    "discord.js": "^11.5.1",
+    "express": "^4.17.1",
     "googleapis": "^39.2.0",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "xmlhttprequest": "^1.8.0",
+    "node-fetch": "latest"
+  },
+  "devDependencies": {
+    "cross-fetch": "^3.0.4"
   }
 }
