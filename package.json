@@ -11,7 +11,8 @@
     "googleapis": "^39.2.0",
     "winston": "^3.2.1",
     "xmlhttprequest": "^1.8.0",
-    "node-fetch": "latest"
+    "node-fetch": "latest",
+    "node-schedule": "latest"
   },
   "devDependencies": {
     "cross-fetch": "^3.0.4"

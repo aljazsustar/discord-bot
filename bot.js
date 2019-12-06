@@ -1,8 +1,24 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const https = require('https');
+const schedule = require('node-schedule')
 
 let message = "";
+let rule = new schedule.RecurrenceRule();
+rule.hour = 7;
+
+let job = schedule.scheduleJob(rule, () => {
+    https.get('https://api.kanye.rest', (response) => {
+        let data = '';
+        response.on('data', (chunk) => {
+            data += chunk;
+        });
+        response.on('end', () => {
+            let object = JSON.stringify(data);
+            client.channels.get('651822721457586188').send(object.quote);
+        })
+    })
+});
 
 client.on('message', msg =>{
     if (msg.content === 'Marco') {
@@ -40,17 +56,4 @@ client.on('message', msg =>{
         msg.reply(reply);
     }
 });
-
-function fetchJoke(callback) {
-    let request = new XMLHttpRequest();
-    request.open('GET', 'https://us-central1-dadsofunny.cloudfunctions.net/DadJokes//random/jokes', true);
-    request.send();
-    request.onreadystatechange = function () {
-        if (request.status === "200") {
-            let json = JSON.parse(request.responseText);
-            callback(json);
-        }
-    };
-}
-
 client.login('NTYzMTI1NzkyMDIwNzU4NTI4.XKU46g.dFleGkHP3CoAX9jZSje23pvgjdM');
