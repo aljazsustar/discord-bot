@@ -26,18 +26,6 @@ client.on('message', msg => {
 });
 
 client.on('message', msg => {
-    if (msg.content === 'lol') {
-        msg.reply('BadJoke++;');
-    }
-});
-
-client.on('message', msg => {
-    if (msg.content === 'hehe') {
-        msg.reply('VeryGoodJoke++;');
-    }
-});
-
-client.on('message', msg => {
     if (msg.content === 'jabolj play despacito') {
         msg.reply('https://www.youtube.com/watch?v=kJQP7kiw5Fk');
     }

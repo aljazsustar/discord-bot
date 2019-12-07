@@ -9,10 +9,12 @@
     "discord.js": "^11.5.1",
     "express": "^4.17.1",
     "googleapis": "^39.2.0",
-    "winston": "^3.2.1",
-    "xmlhttprequest": "^1.8.0",
     "node-fetch": "latest",
-    "node-schedule": "latest"
+    "node-schedule": "latest",
+    "requests": "^0.3.0",
+    "unirest": "^0.6.0",
+    "winston": "^3.2.1",
+    "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {
     "cross-fetch": "^3.0.4"
