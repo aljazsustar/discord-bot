@@ -41,7 +41,7 @@ rule2.hour = 8;
 rule2.minute = 0;
 
 // check if there are any games
-let job = schedule.scheduleJob(rule, function () {
+let job = schedule.scheduleJob(rule2, function () {
     let req = unirest("GET", "https://www.balldontlie.io/api/v1/games?seasons[]=" + year_string + "&team_ids[]=7&dates[]=" + year_string + "-" + month_string + "-" + day_string);
 
     req.end(function (res) {
@@ -60,7 +60,7 @@ let rule3 = new schedule.RecurrenceRule();
 rule3.hour = parseInt(gameTime.substring(0, 2)) - 1;
 rule3.minute = minutesConverter(parseInt(gameTime.substring(2)));
 
-let job2 = schedule.scheduleJob(rule, function () {
+let job2 = schedule.scheduleJob(rule3, function () {
     client.channels.get('566703016443510798').send(game.visitor_team.full_name + " @  " + game.home_team.full_name + " starts now!");
 });
 
