@@ -22,7 +22,7 @@ client.on('message', msg => {
         let req = unirest("GET", "https://www.balldontlie.io/api/v1/games?seasons[]=" + year_string + "&team_ids[]=7&dates[]=" + year_string + "-" + month_string + "-" + day_string);
         req.end(function (res) {
             if (res.error) throw new Error(res.error);
-            if (res.body.data.length > 1) {
+            if (res.body.data.length > 0) {
                 isGame = true;
                 res.body.data.forEach(game => {
                     let start_time = timeConverter(parseInt(game.status.substring(0, 2))) + game.status.substring(1, 4);
