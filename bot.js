@@ -5,7 +5,8 @@ const schedule = require('node-schedule')
 
 let message = "";
 let rule = new schedule.RecurrenceRule();
-rule.hour = 7;
+rule.hour = 6;
+rule.minute = 0;
 
 let job = schedule.scheduleJob(rule, function () {
     https.get('https://api.kanye.rest/?format=text', (response) => {
