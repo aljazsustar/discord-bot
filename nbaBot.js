@@ -17,7 +17,6 @@ let isGame = false;
 
 client.on('message', msg => {
     if (msg.content === "!game") {
-        console.log(day_string);
 
         let req = unirest("GET", "https://www.balldontlie.io/api/v1/games?seasons[]=" + year_string + "&team_ids[]=7&dates[]=" + year_string + "-" + month_string + "-" + day_string);
         req.end(function (res) {
@@ -48,12 +47,16 @@ let job = schedule.scheduleJob(rule2, function () {
 
     req.end(function (res) {
         if (res.error) throw new Error(res.error);
-
-        res.body.data.forEach(game => {
-            gameTime = timeConverter(parseInt(game.status.substring(0, 1))) + game.status.substring(1, 4);
-            homeTeam = game.home_team.full_name;
-            awayTeam = game.visitor_team.full_name;
-        })
+        if (res.body.data.length > 0) {
+            isGame = true;
+            res.body.data.forEach(game => {
+                gameTime = timeConverter(parseInt(game.status.substring(0, 1))) + game.status.substring(1, 4);
+                homeTeam = game.home_team.full_name;
+                awayTeam = game.visitor_team.full_name;
+            })
+        } else {
+            isGame = false;
+        }
     });
 });
 
@@ -83,5 +86,4 @@ function minutesConverter(mins) {
     return mins;
 }
 
-client.login('NjUyODU3NzA1MTMxNjcxNTYy.XeujiQ.XBDHGFLsMWo_vB8xrREjUe8c3aE').then(r => console.log(r));
-client.on('login', () => console.log("Logged in as NBA Bot!"));
+client.login('NjUyODU3NzA1MTMxNjcxNTYy.XeujiQ.XBDHGFLsMWo_vB8xrREjUe8c3aE');
