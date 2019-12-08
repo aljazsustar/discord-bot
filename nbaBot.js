@@ -13,6 +13,7 @@ const year_string = date.getFullYear().toString();
 let gameTime = "";
 let awayTeam = '';
 let homeTeam = '';
+let gameId = 0;
 let isGame = false;
 
 client.on('message', msg => {
@@ -23,6 +24,7 @@ client.on('message', msg => {
             if (res.error) throw new Error(res.error);
             if (res.body.data.length > 0) {
                 isGame = true;
+                gameId = res.body.data.game.id;
                 res.body.data.forEach(game => {
                     let start_time = timeConverter(parseInt(game.status.substring(0, 2))) + game.status.substring(1, 4);
                     gameTime = start_time;
@@ -49,6 +51,7 @@ let job = schedule.scheduleJob(rule2, function () {
         if (res.error) throw new Error(res.error);
         if (res.body.data.length > 0) {
             isGame = true;
+            gameId = res.body.data.game.id;
             res.body.data.forEach(game => {
                 gameTime = timeConverter(parseInt(game.status.substring(0, 1))) + game.status.substring(1, 4);
                 homeTeam = game.home_team.full_name;
@@ -69,6 +72,22 @@ if (isGame) {
     let job2 = schedule.scheduleJob(rule3, function () {
         client.channels.get('566703016443510798').send(game.visitor_team.full_name + " @  " + game.home_team.full_name + " starts now!");
     });
+}
+
+let resultsRule = new schedule.RecurrenceRule();
+resultsRule.hour = parseInt(gameTime.substring(0, 2)) + 4;
+resultsRule.minute = 30;
+
+if (isGame) {
+    let resultsJob = schedule.scheduledJob(resultsRule, function () {
+        let req = unirest("GET", "GET https://www.balldontlie.io/api/v1/games/" + gameId.toString());
+
+        req.end(function (res) {
+            if (res.error) throw new Error(res.error)
+            client.channels.get("566703016443510798").send("FINAL SCORE:\n" + res.body.home_team.full_name + " " + res.body.home_team_score
+                + " : " + res.body.visitor_team_score + " " + res.body.visitor_team.full_name);
+        })
+    })
 }
 
 function timeConverter(time) {
