@@ -33,7 +33,7 @@ client.on('message', msg => {
                     client.channels.get('566703016443510798').send("Today's game: " + game.visitor_team.full_name + " @  " + game.home_team.full_name + "\nGame starts at " + start_time);
                 })
             } else {
-                client.channels.get('566703016443510798').send("The Dallas Maverick do not play today");
+                client.channels.get('566703016443510798').send("The Dallas Mavericks do not play today");
             }
         });
     }
