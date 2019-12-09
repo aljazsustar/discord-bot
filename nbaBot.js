@@ -24,9 +24,9 @@ client.on('message', msg => {
             if (res.error) throw new Error(res.error);
             if (res.body.data.length > 0) {
                 isGame = true;
-                gameId = res.body.data.game.id;
                 res.body.data.forEach(game => {
                     let start_time = timeConverter(parseInt(game.status.substring(0, 2))) + game.status.substring(1, 4);
+                    gameId = game.id;
                     gameTime = start_time;
                     awayTeam = game.visitor_team.full_name;
                     homeTeam = game.home_team.full_name;
@@ -51,9 +51,9 @@ let job = schedule.scheduleJob(rule2, function () {
         if (res.error) throw new Error(res.error);
         if (res.body.data.length > 0) {
             isGame = true;
-            gameId = res.body.data.game.id;
             res.body.data.forEach(game => {
                 gameTime = timeConverter(parseInt(game.status.substring(0, 1))) + game.status.substring(1, 4);
+                gameId = game.id;
                 homeTeam = game.home_team.full_name;
                 awayTeam = game.visitor_team.full_name;
             })
@@ -74,6 +74,7 @@ if (isGame) {
     });
 }
 
+// send the results after 4 hours
 let resultsRule = new schedule.RecurrenceRule();
 resultsRule.hour = parseInt(gameTime.substring(0, 2)) + 4;
 resultsRule.minute = 30;
@@ -83,7 +84,7 @@ if (isGame) {
         let req = unirest("GET", "GET https://www.balldontlie.io/api/v1/games/" + gameId.toString());
 
         req.end(function (res) {
-            if (res.error) throw new Error(res.error)
+            if (res.error) throw new Error(res.error);
             client.channels.get("566703016443510798").send("FINAL SCORE:\n" + res.body.home_team.full_name + " " + res.body.home_team_score
                 + " : " + res.body.visitor_team_score + " " + res.body.visitor_team.full_name);
         })
