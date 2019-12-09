@@ -76,18 +76,23 @@ if (isGame) {
 
 // send the results after 4 hours
 let resultsRule = new schedule.RecurrenceRule();
-resultsRule.hour = parseInt(gameTime.substring(0, 2)) + 4;
-resultsRule.minute = 30;
+resultsRule.hour = parseInt(gameTime.substring(0, 2)) + 2;
 
 if (isGame) {
     let resultsJob = schedule.scheduledJob(resultsRule, function () {
-        let req = unirest("GET", "GET https://www.balldontlie.io/api/v1/games/" + gameId.toString());
-
-        req.end(function (res) {
-            if (res.error) throw new Error(res.error);
-            client.channels.get("566703016443510798").send("FINAL SCORE:\n" + res.body.home_team.full_name + " " + res.body.home_team_score
-                + " : " + res.body.visitor_team_score + " " + res.body.visitor_team.full_name);
+        let finishRule = new schedule.RecurrenceRule();
+        finishRule.minute = new schedule.Range(0, 59, 5);
+        schedule.scheduledJobs(finishRule, function () {
+            let req = unirest("GET", "https://www.balldontlie.io/api/v1/games/" + gameId.toString());
+            req.end(function (res) {
+                if (res.error) throw new Error(res.error);
+                if (res.body.status === "Final") {
+                    client.channels.get("566703016443510798").send("FINAL SCORE:\n" + res.body.home_team.full_name + " " + res.body.home_team_score
+                        + " : " + res.body.visitor_team_score + " " + res.body.visitor_team.full_name);
+                }
+            })
         })
+
     })
 }
 
