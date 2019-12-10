@@ -11,7 +11,7 @@ client.on('ready', () => {
 client.on('message', msg => {
 
     for (const kletvica of kletvice) {
-        if (msg.content.toLowerCase().includes(kletvica) && !msg.author.bot && msg.content.toLowerCase() !== "faks") {
+        if (msg.content.toLowerCase().includes(kletvica) && !msg.author.bot && !(msg.content.toLowerCase().includes("faks"))) {
             msg.reply("Listen here you little imbecile bastard! Who the fuck do you think you are?! I will" +
                 " not allow this in my house! Now go to your room and don't come back ever again!");
             break;
