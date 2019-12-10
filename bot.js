@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const https = require('https');
-const schedule = require('node-schedule')
+const schedule = require('node-schedule');
 
 let message = "";
 let rule = new schedule.RecurrenceRule();
