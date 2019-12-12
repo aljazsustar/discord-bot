@@ -5,10 +5,10 @@ const schedule = require('node-schedule');
 
 const client = new Discord.Client();
 
-const date = new Date();
-const day_string = date.getDate().toString().padStart(2, '0');
-const month_string = (date.getMonth() + 1).toString().padStart(2, '0');
-const year_string = date.getFullYear().toString();
+let date = new Date();
+let day_string = date.getDate().toString().padStart(2, '0');
+let month_string = (date.getMonth() + 1).toString().padStart(2, '0');
+let year_string = date.getFullYear().toString();
 
 let gameTime = "";
 let awayTeam = '';
@@ -16,10 +16,18 @@ let homeTeam = '';
 let gameId = 0;
 let isGame = false;
 
+let updateDateRule = new schedule.RecurrenceRule();
+updateDateRule.hour = 8;
+updateDateRule.minute = 0;
+
+let updateDateJob = schedule.scheduleJob(updateDateRule, function () {
+    date = new Date();
+});
+
 client.on('message', msg => {
     if (msg.content === "!game") {
-
-        let req = unirest("GET", "https://www.balldontlie.io/api/v1/games?seasons[]=" + year_string + "&team_ids[]=7&dates[]=" + year_string + "-" + month_string + "-" + day_string);
+        console.log(day_string);
+        let req = unirest("GET", "https://www.balldontlie.io/api/v1/games?seasons[]=2019&team_ids[]=7&dates[]=" + year_string + "-" + month_string + "-" + day_string);
         req.end(function (res) {
             if (res.error) throw new Error(res.error);
             if (res.body.data.length > 0) {
@@ -41,11 +49,11 @@ client.on('message', msg => {
 
 let rule2 = new schedule.RecurrenceRule();
 rule2.hour = 8;
-rule2.minute = 0;
+rule2.minute = 5;
 
 // check if there are any games
 let job = schedule.scheduleJob(rule2, function () {
-    let req = unirest("GET", "https://www.balldontlie.io/api/v1/games?seasons[]=" + year_string + "&team_ids[]=7&dates[]=" + year_string + "-" + month_string + "-" + day_string);
+    let req = unirest("GET", "https://www.balldontlie.io/api/v1/games?seasons[]=2019&team_ids[]=7&dates[]=" + year_string + "-" + month_string + "-" + day_string);
 
     req.end(function (res) {
         if (res.error) throw new Error(res.error);
