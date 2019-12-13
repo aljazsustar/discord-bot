@@ -1,14 +1,15 @@
 const Discord = require('discord.js');
 const unirest = require('unirest');
 const schedule = require('node-schedule');
+const sleep = require('sleep');
 
 
 const client = new Discord.Client();
 
-const date = new Date();
-const day_string = date.getDate().toString().padStart(2, '0');
-const month_string = (date.getMonth() + 1).toString().padStart(2, '0');
-const year_string = date.getFullYear().toString();
+let date = new Date();
+let day_string = date.getDate().toString().padStart(2, '0');
+let month_string = (date.getMonth() + 1).toString().padStart(2, '0');
+let year_string = date.getFullYear().toString();
 
 let gameTime = "";
 let awayTeam = '';
@@ -16,10 +17,18 @@ let homeTeam = '';
 let gameId = 0;
 let isGame = false;
 
+let updateDateRule = new schedule.RecurrenceRule();
+updateDateRule.hour = 7;
+updateDateRule.minute = 0;
+
+let updateDateJob = schedule.scheduleJob(updateDateRule, function () {
+    date = new Date();
+});
+
 client.on('message', msg => {
     if (msg.content === "!game") {
-
-        let req = unirest("GET", "https://www.balldontlie.io/api/v1/games?seasons[]=" + year_string + "&team_ids[]=7&dates[]=" + year_string + "-" + month_string + "-" + day_string);
+        console.log(day_string);
+        let req = unirest("GET", "https://www.balldontlie.io/api/v1/games?seasons[]=2019&team_ids[]=7&dates[]=" + year_string + "-" + month_string + "-" + day_string);
         req.end(function (res) {
             if (res.error) throw new Error(res.error);
             if (res.body.data.length > 0) {
@@ -33,7 +42,7 @@ client.on('message', msg => {
                     client.channels.get('566703016443510798').send("Today's game: " + game.visitor_team.full_name + " @  " + game.home_team.full_name + "\nGame starts at " + start_time);
                 })
             } else {
-                client.channels.get('566703016443510798').send("The Dallas Maverick do not play today");
+                client.channels.get('566703016443510798').send("The Dallas Mavericks do not play today");
             }
         });
     }
@@ -41,11 +50,11 @@ client.on('message', msg => {
 
 let rule2 = new schedule.RecurrenceRule();
 rule2.hour = 8;
-rule2.minute = 0;
+rule2.minute = 5;
 
 // check if there are any games
 let job = schedule.scheduleJob(rule2, function () {
-    let req = unirest("GET", "https://www.balldontlie.io/api/v1/games?seasons[]=" + year_string + "&team_ids[]=7&dates[]=" + year_string + "-" + month_string + "-" + day_string);
+    let req = unirest("GET", "https://www.balldontlie.io/api/v1/games?seasons[]=2019&team_ids[]=7&dates[]=" + year_string + "-" + month_string + "-" + day_string);
 
     req.end(function (res) {
         if (res.error) throw new Error(res.error);
@@ -76,19 +85,24 @@ if (isGame) {
 
 // send the results after 4 hours
 let resultsRule = new schedule.RecurrenceRule();
-resultsRule.hour = parseInt(gameTime.substring(0, 2)) + 4;
-resultsRule.minute = 30;
+resultsRule.hour = parseInt(gameTime.substring(0, 2)) + 2;
 
 if (isGame) {
-    let resultsJob = schedule.scheduledJob(resultsRule, function () {
-        let req = unirest("GET", "GET https://www.balldontlie.io/api/v1/games/" + gameId.toString());
+    let resultsJob = schedule.scheduleJob(resultsRule, function () {
+        while (res.body.status !== "Final") {
+            let req = unirest("GET", "https://www.balldontlie.io/api/v1/games/" + gameId.toString());
+            req.end(function (res) {
+                if (res.error) throw new Error(res.error);
+                if (res.body.status === "Final") {
+                    date = new Date();
+                    client.channels.get("566703016443510798").send("FINAL SCORE:\n" + res.body.home_team.full_name + " " + res.body.home_team_score
+                        + " : " + res.body.visitor_team_score + " " + res.body.visitor_team.full_name);
+                }
+            });
+            sleep.sleep(300);
+        }
 
-        req.end(function (res) {
-            if (res.error) throw new Error(res.error);
-            client.channels.get("566703016443510798").send("FINAL SCORE:\n" + res.body.home_team.full_name + " " + res.body.home_team_score
-                + " : " + res.body.visitor_team_score + " " + res.body.visitor_team.full_name);
-        })
-    })
+    });
 }
 
 function timeConverter(time) {

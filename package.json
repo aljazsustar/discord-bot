@@ -12,6 +12,7 @@
     "node-fetch": "latest",
     "node-schedule": "latest",
     "requests": "^0.3.0",
+    "sleep": "^6.1.0",
     "unirest": "^0.6.0",
     "winston": "^3.2.1",
     "xmlhttprequest": "^1.8.0"

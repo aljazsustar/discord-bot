@@ -1,14 +1,14 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const https = require('https');
-const schedule = require('node-schedule')
+const schedule = require('node-schedule');
 
 let message = "";
 let rule = new schedule.RecurrenceRule();
 rule.hour = 6;
 rule.minute = 0;
 
-let job = schedule.scheduleJob(rule, function () {
+let motivationJob = schedule.scheduleJob(rule, function () {
     https.get('https://api.kanye.rest/?format=text', (response) => {
         let data = '';
         response.on('data', (chunk) => {
