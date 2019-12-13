@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const unirest = require('unirest');
 const schedule = require('node-schedule');
+const sleep = require('sleep');
 
 
 const client = new Discord.Client();
@@ -17,7 +18,7 @@ let gameId = 0;
 let isGame = false;
 
 let updateDateRule = new schedule.RecurrenceRule();
-updateDateRule.hour = 8;
+updateDateRule.hour = 7;
 updateDateRule.minute = 0;
 
 let updateDateJob = schedule.scheduleJob(updateDateRule, function () {
@@ -88,21 +89,21 @@ resultsRule.hour = parseInt(gameTime.substring(0, 2)) + 2;
 
 if (isGame) {
     let resultsJob = schedule.scheduleJob(resultsRule, function () {
-        let finishRule = new schedule.RecurrenceRule();
-        finishRule.minute = new schedule.Range(0, 59, 5);
-        let finishJob = schedule.scheduleJob(finishRule, function () {
+        while (res.body.status !== "FINAL") {
             let req = unirest("GET", "https://www.balldontlie.io/api/v1/games/" + gameId.toString());
             req.end(function (res) {
                 if (res.error) throw new Error(res.error);
                 if (res.body.status === "Final") {
+                    date = new Date();
                     client.channels.get("566703016443510798").send("FINAL SCORE:\n" + res.body.home_team.full_name + " " + res.body.home_team_score
                         + " : " + res.body.visitor_team_score + " " + res.body.visitor_team.full_name);
                     finishJob.cancel();
                 }
-            })
-        })
+            });
+            sleep.sleep(300);
+        }
 
-    })
+    });
 }
 
 function timeConverter(time) {
