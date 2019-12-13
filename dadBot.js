@@ -2,22 +2,11 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const https = require('https');
 
-const kletvice = ["fak", "fuck", "shit", "pizda", "kurac", "jebemti", "bitch", "sranje", "picka", "jebote", "fml", "fuk"];
-
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
 client.on('message', msg => {
-
-    for (const kletvica of kletvice) {
-        if (msg.content.toLowerCase().includes(kletvica) && !msg.author.bot && msg.content.toLowerCase() !== "faks") {
-            msg.reply("Listen here you little imbecile bastard! Who the fuck do you think you are?! I will" +
-                " not allow this in my house! Now go to your room and don't come back ever again!");
-            break;
-        }
-    }
-
     if (msg.content.toLowerCase() === "dad joke") {
         https.get('https://us-central1-dadsofunny.cloudfunctions.net/DadJokes/random/jokes', (response) => {
             let data = '';
