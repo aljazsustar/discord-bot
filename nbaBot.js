@@ -68,6 +68,7 @@ let job = schedule.scheduleJob(rule2, function () {
                 gameId = game.id;
                 homeTeam = game.home_team.full_name;
                 awayTeam = game.visitor_team.full_name;
+                gameTime = timeConverter(game.start_time)
             })
         } else {
             isGame = false;
