@@ -23,6 +23,9 @@ updateDateRule.minute = 0;
 
 let updateDateJob = schedule.scheduleJob(updateDateRule, function () {
     date = new Date();
+    day_string = date.getDate().toString().padStart(2, '0');
+    month_string = (date.getMonth() + 1).toString().padStart(2, '0');
+    year_string = date.getFullYear().toString();
 });
 
 client.on('message', msg => {
