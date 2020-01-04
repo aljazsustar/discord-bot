@@ -93,11 +93,13 @@ resultsRule.hour = parseInt(gameTime.substring(0, 2)) + 2;
 
 if (isGame) {
     let resultsJob = schedule.scheduleJob(resultsRule, function () {
-        while (res.body.status !== "Final") {
+        let final = false;
+        do {
             let req = unirest("GET", "https://www.balldontlie.io/api/v1/games/" + gameId.toString());
             req.end(function (res) {
                 if (res.error) throw new Error(res.error);
                 if (res.body.status === "Final") {
+                    final = true;
                     date = new Date();
                     client.channels.get("566703016443510798").send("FINAL SCORE:\n" + res.body.home_team.full_name + " " + res.body.home_team_score
                         + " : " + res.body.visitor_team_score + " " + res.body.visitor_team.full_name);
@@ -105,7 +107,7 @@ if (isGame) {
             });
             sleep.sleep(300);
         }
-
+        while (!final)
     });
 }
 
