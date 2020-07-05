@@ -45,6 +45,7 @@ function remind(msg) {
         msg.reply('Wait, that\'s illegal!');
         return;
     }
+    msg.reply('Ayy ayy, captain!');
     let reminder_rule = schedule.scheduleJob(setDate(params[0], params[1], params[2]), () => {
         msg.reply(params[3]);
     });
