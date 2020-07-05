@@ -37,7 +37,11 @@ client.on('message', async msg => {
 function remind(msg) {
     let params = parse(msg);
     console.log(params);
-    if ((params[0] && params[1] && params[2]) <= 0) {
+    if (isNaN(params[0]) || isNaN(params[1]) || isNaN(params[2])) {
+        msg.reply('NaNaNaNaNaNaNaN BATMAAAAAN');
+        return;
+    }
+    if (params[0] <= 0 && params[1] <= 0 && params[2] <= 0) {
         msg.reply('Wait, that\'s illegal!');
         return;
     }
